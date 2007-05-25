@@ -1,0 +1,72 @@
+AtomFeedHelper
+==============
+
+Makes it easier to create atom feeds through Builder.
+
+
+Example
+=======
+
+  # from PostsController
+  def index
+    @posts = Post.find(:all, :limit => 25)
+    
+    respond_to do |format|
+      format.html
+      format.atom
+    end
+  end
+
+  # from posts/index.atom.builder
+
+  atom_feed(:url => formatted_people_url(:atom)) do |feed|
+    feed.title("Address book")
+    feed.updated(@people.first ? @people.first.created_at : Time.now.utc)
+  
+    for post in @posts
+      feed.entry(post) do |entry|
+        entry.title(post.title)
+        entry.content(post.body, :type => 'html')
+
+        entry.author do |author|
+          author.name(post.creator.name)
+          author.email(post.creator.email_address)
+        end
+      end
+    end
+  end
+
+...returns:
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <feed xml:lang="en-US" xmlns="http://www.w3.org/2005/Atom">
+    <id>tag:localhost:people</id>
+    <link type="application/atom+xml" rel="self" href="http://example.com/people.atom"/>
+    <title>Address book</title>
+    <updated></updated>
+    <entry>
+      <id>tag:localhost:3000,2007-05-18T16:35:00-07:00:Person1</id>
+      <published>2007-05-18T16:35:00-07:00</published>
+      <link type="text/html" rel="alternate" href="http://example.com/people/1" />
+      <title>The future is now</title>
+      <content type="html">Once upon a time</content>
+      <author>
+        <name>DHH</name>
+        <email>david@loudthinking.com</email>
+      </author>
+    </entry>
+    <entry>
+      <id>tag:localhost:3000,2007-05-18T09:36:00-07:00:Person2</id>
+      <published>2007-05-18T09:36:00-07:00</published>
+      <link type="text/html" rel="alternate" href="http://example.com/people/1" />
+      <title>Matz</title>
+      <content type="html">This is Matz</content>
+      <author>
+        <name>Matz</name>
+        <email>Matz</email>
+      </author>
+    </entry>
+  </feed>
+
+
+Copyright (c) 2007 David Heinemeier Hansson, released under the MIT license
