@@ -30,17 +30,18 @@ module AtomFeedHelper
       def entry(record)
         @xml.entry do 
           @xml.id("tag:#{@view.request.host_with_port},#{record.created_at.xmlschema}:#{record.class}#{record.id}")
-          @xml.published(record.created_at.xmlschema) if record.respond_to?(:created_at)
-          @xml.updated(record.updated_at.xmlschema)   if record.respond_to?(:updated_at)
-          @xml.link(:rel => 'alternate', :type => 'text/html', :href => @view.polymorphic_url(record))
+          @xml.published(record.created_at.xmlschema)
+          @xml.updated(record.updated_at.xmlschema) if record.respond_to?(:updated_at)
 
           yield @xml
+
+          @xml.link(:rel => 'alternate', :type => 'text/html', :href => @view.polymorphic_url(record))
         end
       end
 
       private
-        def method_missing(method, *arguments)
-          @xml.__send__(method, *arguments)
+        def method_missing(method, *arguments, &block)
+          @xml.__send__(method, *arguments, &block)
         end
     end
 end
