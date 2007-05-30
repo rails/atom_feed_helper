@@ -6,7 +6,7 @@ module AtomFeedHelper
     xml.instruct!
 
     xml.feed "xml:lang" => "en-US", "xmlns" => 'http://www.w3.org/2005/Atom' do
-      xml.id("tag:#{request.host}:#{request.request_uri.split(".")[0].gsub("/", "")}")
+      xml.id("tag:#{request.host},2007:#{request.request_uri.split(".")[0].gsub("/", "")}")
       
       if options[:root_url] || respond_to?(:root_url)
         xml.link(:rel => 'alternate', :type => 'text/html', :href => options[:root_url] || root_url)
@@ -29,7 +29,7 @@ module AtomFeedHelper
 
       def entry(record)
         @xml.entry do 
-          @xml.id("tag:#{@view.request.host_with_port},#{record.created_at.xmlschema}:#{record.class}#{record.id}")
+          @xml.id("tag:#{@view.request.host_with_port},2007:#{record.class}#{record.id}")
           @xml.published(record.created_at.xmlschema)
           @xml.updated(record.updated_at.xmlschema) if record.respond_to?(:updated_at)
 
