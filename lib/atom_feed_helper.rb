@@ -30,7 +30,7 @@ module AtomFeedHelper
       def entry(record)
         @xml.entry do 
           @xml.id("tag:#{@view.request.host_with_port},2007:#{record.class}#{record.id}")
-          @xml.published(record.created_at.xmlschema)
+          @xml.published(record.created_at.xmlschema) if record.respond_to?(:created_at)
           @xml.updated(record.updated_at.xmlschema) if record.respond_to?(:updated_at)
 
           yield @xml
