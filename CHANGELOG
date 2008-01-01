@@ -1,1 +1,5 @@
+* Add support for unique entry URLs.  [rick]
+
+* Update the id tag datestamps to use the current year of the feed or the entry. [rick]
+
 * id tag datestamps should just be the year the plugin is created [Sam Ruby/feedvalidator.org]
